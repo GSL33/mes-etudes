@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Mes Études iPhone" />
+  <meta name="theme-color" content="#111827" />
+  <title>Mes Études iPhone</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #111827;
+      --card: #1f2937;
+      --card-2: #111827;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --line: rgba(255,255,255,0.08);
+      --primary: #60a5fa;
+      --accent: #34d399;
+      --warning: #f59e0b;
+      --danger: #f87171;
+      --shadow: 0 12px 30px rgba(0,0,0,.28);
+      --radius: 18px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; }
+    body { min-height: 100vh; }
+
+    .app {
+      min-height: 100vh;
+      padding-top: calc(var(--safe-top) + 8px);
+      padding-bottom: calc(var(--safe-bottom) + 78px);
+      background:
+        radial-gradient(circle at top, rgba(96,165,250,.14), transparent 28%),
+        linear-gradient(180deg, #0b1220 0%, #101827 45%, #0c1320 100%);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding: 10px 14px 12px;
+      backdrop-filter: blur(18px);
+      background: rgba(11,18,32,.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .icon-btn, .primary-btn, .ghost-btn, .tab-btn {
+      border: 0;
+      border-radius: 14px;
+      color: var(--text);
+      background: rgba(255,255,255,.06);
+      min-height: 42px;
+      padding: 0 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .icon-btn {
+      min-width: 42px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      box-shadow: 0 6px 18px rgba(37,99,235,.28);
+    }
+
+    .ghost-btn {
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--line);
+    }
+
+    .screen {
+      padding: 14px;
+    }
+
+    .card {
+      background: rgba(17,24,39,.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .welcome {
+      padding: 18px;
+      margin-top: 10px;
+    }
+
+    .welcome h1 {
+      font-size: 24px;
+      line-height: 1.1;
+      margin: 0 0 10px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+      margin: 0 0 14px;
+    }
+
+    .stack { display: grid; gap: 12px; }
+    .row { display: flex; gap: 10px; align-items: center; }
+    .row.wrap { flex-wrap: wrap; }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .search-wrap {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search {
+      width: 100%;
+      min-height: 42px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      padding: 0 14px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .search::placeholder { color: #94a3b8; }
+
+    .section-title {
+      margin: 14px 0 10px;
+      color: #cbd5e1;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+    }
+
+    .study-list, .menu-list, .block-list, .note-menu-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .study-item, .menu-item, .note-menu-item {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+    }
+
+    .study-item.active, .menu-item.active, .note-menu-item.active {
+      border-color: rgba(96,165,250,.65);
+      box-shadow: 0 0 0 1px rgba(96,165,250,.22) inset;
+    }
+
+    .study-title, .menu-title, .note-menu-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .study-path, .menu-subtitle, .note-menu-subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .tab-btn.active {
+      background: rgba(96,165,250,.18);
+      border: 1px solid rgba(96,165,250,.45);
+      color: #dbeafe;
+    }
+
+    .content-card {
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    .content-head {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+
+    .content-body {
+      padding: 12px;
+    }
+
+    details.tree {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      overflow: hidden;
+    }
+
+    details.tree > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+    }
+
+    details.tree > summary::-webkit-details-marker { display: none; }
+
+    .caret {
+      width: 18px;
+      flex: 0 0 18px;
+      text-align: center;
+      color: var(--muted);
+      transition: transform .18s ease;
+    }
+
+    details[open] > summary .caret { transform: rotate(90deg); }
+
+    .summary-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tree-content {
+      border-top: 1px solid var(--line);
+      padding: 10px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .submenu-wrap {
+      padding-left: 10px;
+      border-left: 1px solid rgba(255,255,255,.08);
+      display: grid;
+      gap: 10px;
+    }
+
+    .menu-select-btn, .note-select-btn {
+      width: 100%;
+      text-align: left;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      border: 1px solid transparent;
+    }
+
+    .menu-select-btn.active, .note-select-btn.active {
+      border-color: rgba(96,165,250,.6);
+      background: rgba(96,165,250,.14);
+    }
+
+    .block {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+    }
+
+    .block + .block { margin-top: 10px; }
+
+    .block-inner {
+      padding: 14px;
+      line-height: 1.45;
+      font-size: 15px;
+      overflow-wrap: anywhere;
+    }
+
+    .block-text { background: transparent; }
+    .block-verse { background: rgba(255,255,255,.92); color: #274060; font-style: italic; }
+    .block-point { background: rgba(52,211,153,.12); border-left: 4px solid var(--accent); }
+    .block-warning { background: rgba(245,158,11,.12); border-left: 4px solid var(--warning); }
+
+    .block-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .block-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 52vh;
+      object-fit: contain;
+      background: rgba(255,255,255,.04);
+    }
+
+    .block-image-caption {
+      padding: 10px 14px 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .linked-note {
+      background: rgba(255,255,255,.96);
+      color: #111827;
+    }
+
+    .linked-note-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      background: #e5e7eb;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      font-size: 13px;
+      color: #111827;
+    }
+
+    .linked-note-num {
+      background: #fbbf24;
+      color: white;
+      border-radius: 999px;
+      min-width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .shape-zone {
+      position: relative;
+      min-height: 40px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,.12);
+      background: rgba(255,255,255,.025);
+      overflow: hidden;
+    }
+
+    .shape-surface {
+      position: relative;
+      width: 100%;
+      min-height: inherit;
+    }
+
+    .shape {
+      position: absolute;
+      transform-origin: center center;
+    }
+
+    .shape.rect, .shape.circle, .shape.textbox, .shape.textbox-fixed {
+      border-style: solid;
+    }
+
+    .shape.circle { border-radius: 999px; }
+
+    .shape-text {
+      width: 100%;
+      height: 100%;
+      padding: 8px;
+      overflow: hidden;
+      font-size: 13px;
+      line-height: 1.3;
+      color: inherit;
+    }
+
+    .shape.image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .svg-shape {
+      position: absolute;
+      inset: 0;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .empty {
+      padding: 16px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      background: rgba(2,6,23,.58);
+      backdrop-filter: blur(10px);
+    }
+
+    .drawer.open { display: block; }
+
+    .drawer-panel {
+      position: absolute;
+      inset: auto 0 0 0;
+      max-height: 86vh;
+      border-radius: 24px 24px 0 0;
+      background: #0f172a;
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -20px 50px rgba(0,0,0,.45);
+      padding: 10px 14px calc(var(--safe-bottom) + 18px);
+      overflow: auto;
+    }
+
+    .drawer-handle {
+      width: 44px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      margin: 4px auto 14px;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 40;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      padding: 10px 14px calc(var(--safe-bottom) + 10px);
+      background: linear-gradient(180deg, rgba(11,18,32,0), rgba(11,18,32,.82) 24%, rgba(11,18,32,.97));
+      backdrop-filter: blur(18px);
+    }
+
+    .bottom-btn {
+      min-height: 48px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .bottom-btn.active {
+      border-color: rgba(96,165,250,.55);
+      background: rgba(96,165,250,.16);
+    }
+
+    .desktop-warning {
+      display: none;
+      padding: 10px 14px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (min-width: 768px) {
+      .app {
+        max-width: 520px;
+        margin: 0 auto;
+        min-height: 100vh;
+        box-shadow: 0 0 0 1px rgba(255,255,255,.04);
+      }
+      .desktop-warning { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="topbar">
+      <div class="topbar-row">
+        <button class="icon-btn" id="libraryBtn" aria-label="Bibliothèque">☰</button>
+        <div class="brand">
+          <div class="brand-title">Mes Études iPhone</div>
+          <div class="brand-subtitle" id="statusText">Aucun fichier JSON chargé</div>
+        </div>
+        <button class="primary-btn" id="loadBtn">Charger JSON</button>
+        <input type="file" id="fileInput" accept=".json,application/json" hidden>
+      </div>
+      <div class="search-wrap">
+        <input class="search" id="searchInput" placeholder="Rechercher une étude, un menu ou un texte..." />
+      </div>
+    </div>
+
+    <div class="desktop-warning">Version mobile consultation iPhone. Le rendu est optimisé pour petit écran.</div>
+
+    <main class="screen" id="screen">
+      <section class="card welcome" id="welcomeCard">
+        <h1>Consultation mobile de tes études</h1>
+        <p>Ce fichier est une version iPhone dédiée à la consultation fluide des données du même fichier <strong>.json</strong> que sur PC. Il est pensé pour Safari iPhone et pour un chargement manuel du JSON depuis Fichiers ou Dropbox.</p>
+        <div class="stack">
+          <div class="row wrap">
+            <button class="primary-btn" id="loadBtn2">Choisir le fichier JSON</button>
+            <button class="ghost-btn" id="demoBtn">Charger le JSON actuel intégré</button>
+          </div>
+          <div class="hint">Sur iPhone, le bouton peut ouvrir Fichiers et permettre d’aller chercher le fichier synchronisé dans Dropbox.</div>
+        </div>
+      </section>
+
+      <section id="mainContent" hidden>
+        <div class="tabs">
+          <button class="tab-btn active" data-panel="resume">Résumé</button>
+          <button class="tab-btn" data-panel="notes">Notes</button>
+        </div>
+
+        <div class="content-card card">
+          <div class="content-head">
+            <div class="row" style="justify-content:space-between; align-items:flex-start;">
+              <div style="min-width:0; flex:1;">
+                <div class="study-title" id="currentStudyTitle">Étude</div>
+                <div class="study-path" id="currentStudyPath"></div>
+              </div>
+              <span class="pill" id="currentPanelPill">Résumé</span>
+            </div>
+          </div>
+          <div class="content-body">
+            <div id="resumePanel"></div>
+            <div id="notesPanel" hidden></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="drawer" id="drawer">
+      <div class="drawer-panel">
+        <div class="drawer-handle"></div>
+        <div class="section-title">Bibliothèque</div>
+        <div id="studyList" class="study-list"></div>
+        <div id="searchResultsWrap" hidden>
+          <div class="section-title">Résultats</div>
+          <div id="searchResults" class="study-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar" id="bottomBar" hidden>
+      <button class="bottom-btn active" data-panel-switch="resume">Résumé</button>
+      <button class="bottom-btn" data-panel-switch="notes">Notes</button>
+      <button class="bottom-btn" id="bottomLibraryBtn">Bibliothèque</button>
+    </div>
+  </div>
+
+  <script id="embedded-source" type="application/json">{"sidebarTitle":"Mes Études","folders":[{"id":1766699841103,"parentId":1766702955883,"name":"PERSONNAGES BIBLIQUES","open":true},{"id":1766701454693,"parentId":1766701431606,"name":"ÉTUDE","open":true},{"id":1766702788912,"parentId":1766699841103,"name":"AVANT JÉSUS","open":true},{"id":1766702849860,"parentId":1766699841103,"name":"CONTEMPORAIN DE JÉSUS","open":true},{"id":1766702863831,"parentId":1766699841103,"name":"APRÈS JÉSUS","open":true},{"id":1766702955883,"parentId":null,"name":"ÉTUDE","open":true},{"id":1767739089176,"parentId":null,"name":"To Do List","open":true}],"studies":[{"id":1766699877381,"folderId":1766699841103,"title":"Guéhazi","subtitle":"","menus":[],"displayOrder":[]},{"id":1767739203187,"folderId":1767739089176,"title":"RPP","subtitle":"","menus":[],"displayOrder":[]}],"settings":{"darkMode":false},"_lastModified":1772364049731}</script>
+  <script>
+    const state = {
+      appData: null,
+      selectedStudyId: null,
+      selectedMenuId: null,
+      selectedNoteMenuId: null,
+      activePanel: 'resume',
+      searchQuery: ''
+    };
+
+    const fileInput = document.getElementById('fileInput');
+    const loadBtn = document.getElementById('loadBtn');
+    const loadBtn2 = document.getElementById('loadBtn2');
+    const demoBtn = document.getElementById('demoBtn');
+    const libraryBtn = document.getElementById('libraryBtn');
+    const bottomLibraryBtn = document.getElementById('bottomLibraryBtn');
+    const drawer = document.getElementById('drawer');
+    const studyList = document.getElementById('studyList');
+    const searchInput = document.getElementById('searchInput');
+    const searchResultsWrap = document.getElementById('searchResultsWrap');
+    const searchResults = document.getElementById('searchResults');
+    const welcomeCard = document.getElementById('welcomeCard');
+    const mainContent = document.getElementById('mainContent');
+    const bottomBar = document.getElementById('bottomBar');
+    const statusText = document.getElementById('statusText');
+    const resumePanel = document.getElementById('resumePanel');
+    const notesPanel = document.getElementById('notesPanel');
+    const currentStudyTitle = document.getElementById('currentStudyTitle');
+    const currentStudyPath = document.getElementById('currentStudyPath');
+    const currentPanelPill = document.getElementById('currentPanelPill');
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function foldersById() {
+      const map = new Map();
+      (state.appData?.folders || []).forEach(f => map.set(Number(f.id), f));
+      return map;
+    }
+
+    function studies() {
+      return Array.isArray(state.appData?.studies) ? state.appData.studies : [];
+    }
+
+    function getStudy(id = state.selectedStudyId) {
+      return studies().find(s => Number(s.id) === Number(id)) || null;
+    }
+
+    function getMenus(study = getStudy()) {
+      return Array.isArray(study?.menus) ? study.menus : [];
+    }
+
+    function getMenu(id, menuList = getMenus()) {
+      return menuList.find(m => Number(m.id) === Number(id)) || null;
+    }
+
+    function getNoteMenus(menu) {
+      return Array.isArray(menu?.noteMenus) ? menu.noteMenus : [];
+    }
+
+    function getNoteMenu(noteMenuId, menu = getMenu(state.selectedMenuId)) {
+      return getNoteMenus(menu).find(nm => Number(nm.id) === Number(noteMenuId)) || null;
+    }
+
+    function getFolderPath(folderId) {
+      const map = foldersById();
+      const parts = [];
+      let cursor = map.get(Number(folderId));
+      while (cursor) {
+        parts.unshift(cursor.name || 'Dossier');
+        cursor = cursor.parentId != null ? map.get(Number(cursor.parentId)) : null;
+      }
+      return parts.join(' / ');
+    }
+
+    function folderChildren(parentId) {
+      const map = foldersById();
+      return [...map.values()].filter(folder => {
+        const a = folder.parentId == null ? null : Number(folder.parentId);
+        const b = parentId == null ? null : Number(parentId);
+        return a === b;
+      });
+    }
+
+    function studiesInFolder(folderId) {
+      return studies().filter(study => Number(study.folderId) === Number(folderId));
+    }
+
+    function hasFolderContent(folderId) {
+      return folderChildren(folderId).length > 0 || studiesInFolder(folderId).length > 0;
+    }
+
+    function renderLibraryTree(parentId = null, depth = 0) {
+      const folders = folderChildren(parentId);
+      const directStudies = parentId == null
+        ? studies().filter(study => study.folderId == null)
+        : studiesInFolder(parentId);
+
+      const parts = [];
+
+      folders.forEach(folder => {
+        const childrenHtml = renderLibraryTree(folder.id, depth + 1);
+        parts.push(`
+          <details class="tree library-tree">
+            <summary>
+              <span class="caret">›</span>
+              <div class="summary-text">
+                <div class="menu-title">📁 ${escapeHtml(folder.name || 'Dossier')}</div>
+                <div class="menu-subtitle">${childrenHtml ? 'Sous-dossiers / études' : 'Dossier'}</div>
+              </div>
+            </summary>
+            <div class="tree-content">
+              ${childrenHtml || '<div class="empty">Dossier vide.</div>'}
+            </div>
+          </details>
+        `);
+      });
+
+      directStudies.forEach(study => {
+        const active = Number(study.id) === Number(state.selectedStudyId);
+        const folderPath = getFolderPath(study.folderId);
+        parts.push(`
+          <button class="study-item ${active ? 'active' : ''}" data-study-id="${study.id}" style="text-align:left;">
+            <div class="study-title">${escapeHtml(study.title || 'Étude')}</div>
+            <div class="study-path">${escapeHtml(folderPath || 'Sans dossier')}</div>
+            <div class="row wrap" style="margin-top:10px;">
+              <span class="pill">${(study.menus || []).length} menu(s)</span>
+              ${study.subtitle ? `<span class="pill">${escapeHtml(study.subtitle)}</span>` : ''}
+            </div>
+          </button>
+        `);
+      });
+
+      return parts.join('');
+    }
+
+    function getTopFolderLabel(folderId) {
+      const map = foldersById();
+      let cursor = map.get(Number(folderId));
+      let last = null;
+      while (cursor) {
+        last = cursor;
+        cursor = cursor.parentId != null ? map.get(Number(cursor.parentId)) : null;
+      }
+      return last?.name || 'Sans dossier';
+    }
+
+
+    function menuChildren(parentId, menuList = getMenus()) {
+      return menuList.filter(m => {
+        const a = m.parentId == null ? null : Number(m.parentId);
+        const b = parentId == null ? null : Number(parentId);
+        return a === b;
+      });
+    }
+
+    function noteMenuChildren(parentId, noteMenus) {
+      return noteMenus.filter(m => {
+        const a = m.parentId == null ? null : Number(m.parentId);
+        const b = parentId == null ? null : Number(parentId);
+        return a === b;
+      });
+    }
+
+    function ensureSelection() {
+      const allStudies = studies();
+      if (!allStudies.length) {
+        state.selectedStudyId = null;
+        state.selectedMenuId = null;
+        state.selectedNoteMenuId = null;
+        return;
+      }
+
+      if (!getStudy()) {
+        state.selectedStudyId = Number(allStudies[0].id);
+      }
+
+      const allMenus = getMenus();
+      if (allMenus.length) {
+        const currentMenu = getMenu(state.selectedMenuId, allMenus);
+        if (!currentMenu) {
+          const firstRoot = menuChildren(null, allMenus)[0] || allMenus[0];
+          state.selectedMenuId = Number(firstRoot.id);
+        }
+      } else {
+        state.selectedMenuId = null;
+      }
+
+      if (state.activePanel === 'notes') {
+        const nm = getNoteMenu(state.selectedNoteMenuId);
+        if (!nm) {
+          const root = noteMenuChildren(null, getNoteMenus(getMenu(state.selectedMenuId)))[0] || null;
+          state.selectedNoteMenuId = root ? Number(root.id) : null;
+        }
+      }
+    }
+
+    function setLoadedState(filename) {
+      welcomeCard.hidden = true;
+      mainContent.hidden = false;
+      bottomBar.hidden = false;
+      statusText.textContent = filename ? `JSON chargé : ${filename}` : 'JSON chargé';
+    }
+
+    function loadAppData(parsed, filename = '') {
+      if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.studies)) {
+        alert("Ce fichier JSON ne correspond pas au format attendu.");
+        return;
+      }
+      state.appData = parsed;
+      state.searchQuery = '';
+      searchInput.value = '';
+      state.activePanel = 'resume';
+      ensureSelection();
+      setLoadedState(filename);
+      renderAll();
+    }
+
+    function openDrawer() { drawer.classList.add('open'); }
+    function closeDrawer() { drawer.classList.remove('open'); }
+
+    drawer.addEventListener('click', (e) => {
+      if (e.target === drawer) closeDrawer();
+    });
+
+    loadBtn.addEventListener('click', () => fileInput.click());
+    loadBtn2.addEventListener('click', () => fileInput.click());
+    libraryBtn.addEventListener('click', openDrawer);
+    bottomLibraryBtn.addEventListener('click', openDrawer);
+
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        loadAppData(parsed, file.name);
+      } catch (err) {
+        console.error(err);
+        alert("Impossible de lire le fichier JSON.");
+      } finally {
+        fileInput.value = '';
+      }
+    });
+
+    demoBtn.addEventListener('click', () => {
+      const script = document.getElementById('embedded-source');
+      if (!script.textContent.trim()) {
+        alert("Aucune donnée intégrée disponible dans cette version.");
+        return;
+      }
+      try {
+        loadAppData(JSON.parse(script.textContent), 'source intégrée');
+      } catch (err) {
+        console.error(err);
+        alert("Impossible de charger les données intégrées.");
+      }
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.activePanel = btn.dataset.panel;
+        if (state.activePanel === 'notes' && !getNoteMenu(state.selectedNoteMenuId)) {
+          const root = noteMenuChildren(null, getNoteMenus(getMenu(state.selectedMenuId)))[0];
+          state.selectedNoteMenuId = root ? Number(root.id) : null;
+        }
+        renderPanels();
+        renderTabButtons();
+      });
+    });
+
+    document.querySelectorAll('[data-panel-switch]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.activePanel = btn.dataset.panelSwitch;
+        renderPanels();
+        renderTabButtons();
+      });
+    });
+
+    searchInput.addEventListener('input', () => {
+      state.searchQuery = searchInput.value.trim().toLowerCase();
+      renderStudyList();
+    });
+
+    function renderAll() {
+      renderStudyList();
+      renderHeader();
+      renderPanels();
+      renderTabButtons();
+    }
+
+    function renderHeader() {
+      const study = getStudy();
+      currentStudyTitle.textContent = study?.title || 'Étude';
+      currentStudyPath.textContent = study ? getFolderPath(study.folderId) : '';
+      currentPanelPill.textContent = state.activePanel === 'resume' ? 'Résumé' : 'Notes';
+    }
+
+    function renderTabButtons() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.panel === state.activePanel);
+      });
+      document.querySelectorAll('[data-panel-switch]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.panelSwitch === state.activePanel);
+      });
+      resumePanel.hidden = state.activePanel !== 'resume';
+      notesPanel.hidden = state.activePanel !== 'notes';
+      currentPanelPill.textContent = state.activePanel === 'resume' ? 'Résumé' : 'Notes';
+    }
+
+    function searchEntries() {
+      const results = [];
+      for (const study of studies()) {
+        const studyPath = getFolderPath(study.folderId);
+        const menus = Array.isArray(study.menus) ? study.menus : [];
+        results.push({ kind: 'study', studyId: Number(study.id), label: study.title || 'Étude', sub: studyPath });
+        menus.forEach(menu => {
+          results.push({
+            kind: 'menu',
+            studyId: Number(study.id),
+            menuId: Number(menu.id),
+            label: menu.title || 'Menu',
+            sub: `${study.title || 'Étude'} · ${studyPath}`
+          });
+          (menu.blocks || []).forEach(block => {
+            const text = getBlockText(block).slice(0, 140);
+            if (text) {
+              results.push({
+                kind: 'block',
+                studyId: Number(study.id),
+                menuId: Number(menu.id),
+                label: text,
+                sub: `${study.title || 'Étude'} · ${menu.title || 'Menu'}`
+              });
+            }
+          });
+          (menu.noteMenus || []).forEach(noteMenu => {
+            results.push({
+              kind: 'noteMenu',
+              studyId: Number(study.id),
+              menuId: Number(menu.id),
+              noteMenuId: Number(noteMenu.id),
+              label: noteMenu.title || "Note d'étude",
+              sub: `${study.title || 'Étude'} · ${menu.title || 'Menu'}`
+            });
+            (noteMenu.blocks || []).forEach(block => {
+              const text = getBlockText(block).slice(0, 140);
+              if (text) {
+                results.push({
+                  kind: 'noteBlock',
+                  studyId: Number(study.id),
+                  menuId: Number(menu.id),
+                  noteMenuId: Number(noteMenu.id),
+                  label: text,
+                  sub: `${study.title || 'Étude'} · ${noteMenu.title || "Note d'étude"}`
+                });
+              }
+            });
+          });
+        });
+      }
+      return results;
+    }
+
+    function applySearch(results) {
+      const q = state.searchQuery;
+      if (!q) return [];
+      return results.filter(r => `${r.label} ${r.sub}`.toLowerCase().includes(q)).slice(0, 60);
+    }
+
+    function renderStudyList() {
+      const allStudies = studies();
+      if (!allStudies.length) {
+        studyList.innerHTML = '<div class="empty">Aucune étude dans le fichier chargé.</div>';
+        searchResultsWrap.hidden = true;
+        return;
+      }
+
+      const query = state.searchQuery;
+
+      if (!query) {
+        const libraryHtml = renderLibraryTree(null);
+        studyList.innerHTML = libraryHtml || '<div class="empty">Bibliothèque vide.</div>';
+      } else {
+        studyList.innerHTML = allStudies.map(study => {
+          const active = Number(study.id) === Number(state.selectedStudyId);
+          const folderPath = getFolderPath(study.folderId);
+          return `
+            <button class="study-item ${active ? 'active' : ''}" data-study-id="${study.id}" style="text-align:left;">
+              <div class="study-title">${escapeHtml(study.title || 'Étude')}</div>
+              <div class="study-path">${escapeHtml(folderPath || 'Sans dossier')}</div>
+              <div class="row wrap" style="margin-top:10px;">
+                <span class="pill">${(study.menus || []).length} menu(s)</span>
+                ${study.subtitle ? `<span class="pill">${escapeHtml(study.subtitle)}</span>` : ''}
+              </div>
+            </button>
+          `;
+        }).join('');
+      }
+
+      studyList.querySelectorAll('[data-study-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.selectedStudyId = Number(btn.dataset.studyId);
+          state.selectedMenuId = null;
+          state.selectedNoteMenuId = null;
+          ensureSelection();
+          closeDrawer();
+          renderAll();
+        });
+      });
+
+      if (query) {
+        const found = applySearch(searchEntries());
+        searchResultsWrap.hidden = false;
+        searchResults.innerHTML = found.length ? found.map((item, idx) => `
+          <button class="study-item" data-search-idx="${idx}" style="text-align:left;">
+            <div class="study-title">${escapeHtml(item.label)}</div>
+            <div class="study-path">${escapeHtml(item.sub)}</div>
+          </button>
+        `).join('') : '<div class="empty">Aucun résultat.</div>';
+
+        searchResults.querySelectorAll('[data-search-idx]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const item = found[Number(btn.dataset.searchIdx)];
+            state.selectedStudyId = Number(item.studyId);
+            state.selectedMenuId = item.menuId != null ? Number(item.menuId) : null;
+            state.selectedNoteMenuId = item.noteMenuId != null ? Number(item.noteMenuId) : null;
+            state.activePanel = item.noteMenuId != null ? 'notes' : 'resume';
+            ensureSelection();
+            closeDrawer();
+            renderAll();
+          });
+        });
+      } else {
+        searchResultsWrap.hidden = true;
+        searchResults.innerHTML = '';
+      }
+    }
+
+    function getBlockText(block) {
+      if (!block) return '';
+      if (typeof block.text === 'string') return block.text;
+      if (typeof block.content === 'string') return block.content;
+      if (typeof block.body === 'string') return block.body;
+      if (typeof block.caption === 'string') return block.caption;
+      if (typeof block.sourceLabel === 'string') return block.sourceLabel;
+      return '';
+    }
+
+    function renderPanels() {
+      renderHeader();
+      renderResumePanel();
+      renderNotesPanel();
+    }
+
+    function renderResumePanel() {
+      const study = getStudy();
+      const allMenus = getMenus(study);
+
+      if (!study) {
+        resumePanel.innerHTML = '<div class="empty">Charge un fichier JSON.</div>';
+        return;
+      }
+
+      if (!allMenus.length) {
+        resumePanel.innerHTML = '<div class="empty">Cette étude ne contient pas encore de menu.</div>';
+        return;
+      }
+
+      const html = `
+        <div class="section-title">Navigation Résumé</div>
+        ${renderMenuTree(allMenus, null)}
+        <div class="section-title">Contenu du menu</div>
+        <div class="block-list">${renderMenuContent(getMenu(state.selectedMenuId, allMenus))}</div>
+      `;
+      resumePanel.innerHTML = html;
+      bindMenuTree(resumePanel);
+    }
+
+    function renderNotesPanel() {
+      const menu = getMenu(state.selectedMenuId);
+      if (!menu) {
+        notesPanel.innerHTML = '<div class="empty">Sélectionne un menu du résumé.</div>';
+        return;
+      }
+
+      const noteMenus = getNoteMenus(menu);
+      const hasRightContent = (Array.isArray(menu.freeBlocks) && menu.freeBlocks.length)
+        || (Array.isArray(menu.freeShapes) && menu.freeShapes.length)
+        || (Array.isArray(noteMenus) && noteMenus.length);
+
+      if (!hasRightContent) {
+        notesPanel.innerHTML = '<div class="empty">Aucun contenu dans le panneau de droite pour ce menu.</div>';
+        return;
+      }
+
+      if (noteMenus.length && !getNoteMenu(state.selectedNoteMenuId, menu)) {
+        state.selectedNoteMenuId = null;
+      }
+
+      notesPanel.innerHTML = `
+        ${noteMenus.length ? `<div class="section-title">Navigation Notes</div>${renderNoteMenuTree(noteMenus, null)}` : ''}
+        <div class="section-title">Contenu Notes</div>
+        <div class="block-list">${renderDesktopLikeRightPanel(menu)}</div>
+      `;
+      bindNoteMenuTree(notesPanel);
+    }
+
+    function renderMenuTree(menuList, parentId) {
+      const items = menuChildren(parentId, menuList);
+      if (!items.length) return '';
+      return items.map(menu => {
+        const children = menuChildren(menu.id, menuList);
+        const active = Number(menu.id) === Number(state.selectedMenuId);
+        return `
+          <details class="tree" ${active || hasMenuDescendantSelected(menu.id, menuList) ? 'open' : ''}>
+            <summary>
+              <span class="caret">›</span>
+              <div class="summary-text">
+                <div class="menu-title">${escapeHtml(menu.title || 'Menu')}</div>
+                <div class="menu-subtitle">${escapeHtml((menu.tags || []).join(' · '))}</div>
+              </div>
+            </summary>
+            <div class="tree-content">
+              <button class="menu-select-btn ${active ? 'active' : ''}" data-menu-id="${menu.id}">
+                Ouvrir ${escapeHtml(menu.title || 'Menu')}
+              </button>
+              ${children.length ? `<div class="submenu-wrap">${renderMenuTree(menuList, menu.id)}</div>` : ''}
+            </div>
+          </details>
+        `;
+      }).join('');
+    }
+
+    function hasMenuDescendantSelected(menuId, menuList) {
+      let current = getMenu(state.selectedMenuId, menuList);
+      while (current && current.parentId != null) {
+        if (Number(current.parentId) === Number(menuId)) return true;
+        current = getMenu(current.parentId, menuList);
+      }
+      return false;
+    }
+
+    function bindMenuTree(root) {
+      root.querySelectorAll('[data-menu-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.selectedMenuId = Number(btn.dataset.menuId);
+          if (state.activePanel === 'notes') {
+            const noteMenus = getNoteMenus(getMenu(state.selectedMenuId));
+            const first = noteMenuChildren(null, noteMenus)[0] || noteMenus[0] || null;
+            state.selectedNoteMenuId = first ? Number(first.id) : null;
+          }
+          renderPanels();
+        });
+      });
+    }
+
+    function renderNoteMenuTree(noteMenus, parentId) {
+      const items = noteMenuChildren(parentId, noteMenus);
+      if (!items.length) return '';
+      return items.map(menu => {
+        const children = noteMenuChildren(menu.id, noteMenus);
+        const active = Number(menu.id) === Number(state.selectedNoteMenuId);
+        return `
+          <details class="tree" ${active || hasNoteDescendantSelected(menu.id, noteMenus) ? 'open' : ''}>
+            <summary>
+              <span class="caret">›</span>
+              <div class="summary-text">
+                <div class="note-menu-title">${escapeHtml(menu.title || "Note d'étude")}</div>
+                <div class="note-menu-subtitle">${escapeHtml((menu.tags || []).join(' · '))}</div>
+              </div>
+            </summary>
+            <div class="tree-content">
+              <button class="note-select-btn ${active ? 'active' : ''}" data-note-menu-id="${menu.id}">
+                Ouvrir ${escapeHtml(menu.title || "Note d'étude")}
+              </button>
+              ${children.length ? `<div class="submenu-wrap">${renderNoteMenuTree(noteMenus, menu.id)}</div>` : ''}
+            </div>
+          </details>
+        `;
+      }).join('');
+    }
+
+    function hasNoteDescendantSelected(noteMenuId, noteMenus) {
+      let current = getNoteMenu(state.selectedNoteMenuId, getMenu(state.selectedMenuId));
+      while (current && current.parentId != null) {
+        if (Number(current.parentId) === Number(noteMenuId)) return true;
+        current = noteMenus.find(n => Number(n.id) === Number(current.parentId));
+      }
+      return false;
+    }
+
+    function bindNoteMenuTree(root) {
+      root.querySelectorAll('[data-note-menu-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.selectedNoteMenuId = Number(btn.dataset.noteMenuId);
+          renderNotesPanel();
+        });
+      });
+    }
+
+    function renderMenuContent(menu) {
+      if (!menu) return '<div class="empty">Sélectionne un menu.</div>';
+      const html = renderOrderedContent(menu, menu.blocks || [], menu.freeShapes || []);
+      return html || '<div class="empty">Aucun contenu dans ce menu.</div>';
+    }
+
+    function renderNoteMenuContent(noteMenu, parentMenu) {
+      if (!noteMenu) return '<div class="empty">Sélectionne une note d’étude.</div>';
+      const html = renderOrderedContent(noteMenu, noteMenu.blocks || [], noteMenu.freeShapes || []);
+      return html || '<div class="empty">Aucun contenu dans cette note.</div>';
+    }
+
+    function createMobileRightPanelOrder(menu) {
+      const order = [];
+      const rootNoteMenus = (menu.noteMenus || []).filter(nm => nm.parentId == null);
+
+      if (Array.isArray(menu.freeShapes) && menu.freeShapes.length) {
+        [...menu.freeShapes].sort((a, b) => Number(a.y || 0) - Number(b.y || 0)).forEach(shape => {
+          order.push({ type: 'shape', id: shape.id });
+        });
+      }
+
+      if (Array.isArray(menu.freeBlocks) && menu.freeBlocks.length) {
+        menu.freeBlocks.forEach((block, idx) => {
+          order.push({ type: 'block', id: block.id ?? idx });
+        });
+      }
+
+      if (rootNoteMenus.length) {
+        rootNoteMenus.forEach(nm => order.push({ type: 'noteMenu', id: nm.id }));
+      }
+
+      return order;
+    }
+
+    function renderDesktopLikeRightPanel(menu) {
+      const noteMenus = getNoteMenus(menu);
+      const freeBlocks = Array.isArray(menu.freeBlocks) ? menu.freeBlocks : [];
+      const freeShapes = Array.isArray(menu.freeShapes) ? menu.freeShapes : [];
+      const order = Array.isArray(menu.elementOrder) && menu.elementOrder.length
+        ? menu.elementOrder
+        : createMobileRightPanelOrder(menu);
+
+      const rootNoteMenus = noteMenus.filter(nm => nm.parentId == null);
+      const blockIds = new Set(freeBlocks.map((b, idx) => Number(b.id ?? idx)));
+      const shapeIds = new Set(freeShapes.map(s => Number(s.id)));
+      const noteMenuIds = new Set(rootNoteMenus.map(nm => Number(nm.id)));
+      const parts = [];
+      let pendingShapes = [];
+
+      const flushShapes = () => {
+        if (pendingShapes.length) {
+          parts.push(renderShapesGroup(pendingShapes));
+          pendingShapes = [];
+        }
+      };
+
+      for (const item of order) {
+        if (!item) continue;
+        if (item.type === 'shape') {
+          const shape = freeShapes.find(s => Number(s.id) === Number(item.id));
+          if (shape) pendingShapes.push(shape);
+          continue;
+        }
+        flushShapes();
+        if (item.type === 'block') {
+          const found = freeBlocks.find((b, idx) => Number(b.id ?? idx) === Number(item.id));
+          if (found) parts.push(renderBlock(found));
+        } else if (item.type === 'noteMenu') {
+          const nm = rootNoteMenus.find(m => Number(m.id) === Number(item.id));
+          if (nm) parts.push(renderNoteMenuBranch(nm, noteMenus));
+        }
+      }
+      flushShapes();
+
+      freeBlocks.forEach((block, idx) => {
+        const blockId = Number(block.id ?? idx);
+        if (!order.some(item => item && item.type === 'block' && Number(item.id) === blockId)) {
+          parts.push(renderBlock(block));
+        }
+      });
+
+      const trailingShapes = freeShapes.filter(shape => !order.some(item => item && item.type === 'shape' && Number(item.id) === Number(shape.id)));
+      if (trailingShapes.length) parts.push(renderShapesGroup(trailingShapes));
+
+      rootNoteMenus.forEach(nm => {
+        if (!order.some(item => item && item.type === 'noteMenu' && Number(item.id) === Number(nm.id))) {
+          parts.push(renderNoteMenuBranch(nm, noteMenus));
+        }
+      });
+
+      return parts.join('') || '<div class="empty">Aucun contenu.</div>';
+    }
+
+    function renderNoteMenuBranch(noteMenu, noteMenus) {
+      if (!noteMenu) return '';
+      const children = noteMenuChildren(noteMenu.id, noteMenus);
+      const isActive = Number(noteMenu.id) === Number(state.selectedNoteMenuId);
+      const shouldOpen = isActive || hasNoteDescendantSelected(noteMenu.id, noteMenus) || !!noteMenu.open;
+      const contentHtml = renderOrderedContent(noteMenu, noteMenu.blocks || [], noteMenu.freeShapes || []);
+      return `
+        <details class="tree" ${shouldOpen ? 'open' : ''}>
+          <summary>
+            <span class="caret">›</span>
+            <div class="summary-text">
+              <div class="note-menu-title">${escapeHtml(noteMenu.title || "Note d'étude")}</div>
+              <div class="note-menu-subtitle">${escapeHtml((noteMenu.tags || []).join(' · '))}</div>
+            </div>
+          </summary>
+          <div class="tree-content">
+            <button class="note-select-btn ${isActive ? 'active' : ''}" data-note-menu-id="${noteMenu.id}">
+              ${isActive ? 'Note active' : `Ouvrir ${escapeHtml(noteMenu.title || "Note d'étude")}`}
+            </button>
+            ${contentHtml || '<div class="empty">Aucun contenu dans cette note.</div>'}
+            ${children.length ? `<div class="submenu-wrap">${children.map(child => renderNoteMenuBranch(child, noteMenus)).join('')}</div>` : ''}
+          </div>
+        </details>
+      `;
+    }
+
+    function renderOrderedContent(owner, blocks, freeShapes) {
+      const order = Array.isArray(owner?.elementOrder) ? owner.elementOrder : [];
+      const blockMap = new Map((blocks || []).map((b, idx) => [Number(b.id ?? idx), { block: b, idx }]));
+      const shapeMap = new Map((freeShapes || []).map(s => [Number(s.id), s]));
+
+      if (!order.length) {
+        const parts = [];
+        if (blocks?.length) {
+          blocks.forEach(block => parts.push(renderBlock(block)));
+        }
+        if (freeShapes?.length) {
+          parts.push(renderShapesGroup(freeShapes));
+        }
+        return parts.join('');
+      }
+
+      const parts = [];
+      let pendingShapes = [];
+
+      function flushShapes() {
+        if (pendingShapes.length) {
+          parts.push(renderShapesGroup(pendingShapes));
+          pendingShapes = [];
+        }
+      }
+
+      for (const item of order) {
+        if (!item) continue;
+        if (item.type === 'shape') {
+          const shape = shapeMap.get(Number(item.id));
+          if (shape) pendingShapes.push(shape);
+          continue;
+        }
+        flushShapes();
+        if (item.type === 'block') {
+          const found = blocks.find(b => Number(b.id) === Number(item.id));
+          if (found) parts.push(renderBlock(found));
+        }
+      }
+      flushShapes();
+
+      const orderedBlockIds = new Set(order.filter(i => i && i.type === 'block').map(i => Number(i.id)));
+      const orderedShapeIds = new Set(order.filter(i => i && i.type === 'shape').map(i => Number(i.id)));
+
+      blocks.forEach(block => {
+        if (!orderedBlockIds.has(Number(block.id))) parts.push(renderBlock(block));
+      });
+
+      const extraShapes = (freeShapes || []).filter(s => !orderedShapeIds.has(Number(s.id)));
+      if (extraShapes.length) parts.push(renderShapesGroup(extraShapes));
+
+      return parts.join('');
+    }
+
+    function renderBlock(block) {
+      if (!block) return '';
+      const type = block.type || 'text';
+      if (type === 'text') {
+        return `<div class="block block-text"><div class="block-inner">${renderRich(block.text || block.content || '')}</div></div>`;
+      }
+      if (type === 'verse') {
+        return `<div class="block block-verse"><div class="block-inner">${renderRich(block.text || block.content || '')}</div></div>`;
+      }
+      if (type === 'point') {
+        return `<div class="block block-point"><div class="block-inner">${renderRich(block.text || block.content || '')}</div></div>`;
+      }
+      if (type === 'warning') {
+        return `<div class="block block-warning"><div class="block-inner">${renderRich(block.text || block.content || '')}</div></div>`;
+      }
+      if (type === 'linkedNote') {
+        return `
+          <div class="block linked-note">
+            <div class="linked-note-head">
+              <span class="linked-note-num">${escapeHtml(block.number || '•')}</span>
+              <div style="min-width:0; flex:1;">${escapeHtml(block.sourceLabel || block.source || 'Note liée')}</div>
+            </div>
+            <div class="block-inner">${renderRich(block.content || block.text || '')}</div>
+          </div>
+        `;
+      }
+      if (type === 'image') {
+        const src = block.src || block.imageSrc || '';
+        return `
+          <div class="block block-image">
+            ${src ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(block.alt || 'Image')}" loading="lazy">` : ''}
+            ${block.caption ? `<div class="block-image-caption">${escapeHtml(block.caption)}</div>` : ''}
+          </div>
+        `;
+      }
+      if (type === 'video') {
+        return `<div class="block"><div class="block-inner"><div class="block-title">Vidéo</div><div>${escapeHtml(block.title || block.url || 'Bloc vidéo')}</div></div></div>`;
+      }
+      if (type === 'pdf' || type === 'epub') {
+        return `<div class="block"><div class="block-inner"><div class="block-title">${type.toUpperCase()}</div><div>${escapeHtml(block.title || block.fileName || 'Document')}</div></div></div>`;
+      }
+      if (type === 'externalFile') {
+        return `<div class="block"><div class="block-inner"><div class="block-title">Fichier</div><div>${escapeHtml(block.fileName || block.title || 'Fichier externe')}</div></div></div>`;
+      }
+      return `<div class="block"><div class="block-inner">${renderRich(getBlockText(block))}</div></div>`;
+    }
+
+    function renderRich(html) {
+      if (!html) return '';
+      return String(html);
+    }
+
+    function renderShapesGroup(shapes) {
+      if (!shapes?.length) return '';
+      const normalized = shapes.map(s => ({
+        ...s,
+        x: Number(s.x || 0),
+        y: Number(s.y || 0),
+        width: Math.max(1, Number(s.width || 0)),
+        height: Math.max(1, Number(s.height || 0))
+      }));
+      const maxRight = Math.max(...normalized.map(s => s.x + s.width), 0);
+      const maxBottom = Math.max(...normalized.map(s => s.y + s.height), 0);
+      const viewWidth = Math.max(320, maxRight + 24);
+      const viewHeight = Math.max(40, maxBottom + 24);
+
+      const htmlShapes = normalized.map(shape => renderShape(shape)).join('');
+      const svgLines = normalized.filter(s => s.type === 'arrow' || s.type === 'line').map(s => renderLineShape(s)).join('');
+
+      return `
+        <div class="shape-zone">
+          <div class="shape-surface" style="height:${viewHeight}px">
+            <svg class="svg-shape" viewBox="0 0 ${viewWidth} ${viewHeight}" preserveAspectRatio="none">
+              <defs>
+                <marker id="arrowHead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L12,6 L0,12 z" fill="currentColor"></path>
+                </marker>
+              </defs>
+              ${svgLines}
+            </svg>
+            ${htmlShapes}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderShape(shape) {
+      const type = shape.type || 'rect';
+      const rotation = Number(shape.rotation || 0);
+      const baseStyle = `left:${shape.x}px;top:${shape.y}px;width:${shape.width}px;height:${shape.height}px;transform:rotate(${rotation}deg);`;
+      if (type === 'line' || type === 'arrow') return '';
+      if (type === 'image') {
+        const src = shape.imageSrc || shape.src || '';
+        return `
+          <div class="shape image" style="${baseStyle}">
+            ${src ? `<img src="${escapeHtml(src)}" alt="image">` : ''}
+          </div>
+        `;
+      }
+      const borderColor = shape.borderColor || '#60a5fa';
+      const fillColor = shape.fillColor || 'rgba(96,165,250,.18)';
+      const strokeWidth = Number(shape.strokeWidth || 2);
+      const color = shape.textColor || '#f8fafc';
+      return `
+        <div class="shape ${escapeHtml(type)}" style="${baseStyle}border-color:${escapeHtml(borderColor)};background:${escapeHtml(fillColor)};border-width:${strokeWidth}px;color:${escapeHtml(color)};">
+          <div class="shape-text">${renderRich(shape.text || '')}</div>
+        </div>
+      `;
+    }
+
+    function renderLineShape(shape) {
+      const color = shape.borderColor || '#60a5fa';
+      const strokeWidth = Math.max(1, Number(shape.strokeWidth || 2));
+      const x1 = Number(shape.x || 0);
+      const y1 = Number(shape.y || 0);
+      const x2 = x1 + Number(shape.width || 0);
+      const y2 = y1 + Number(shape.height || 0);
+      const marker = shape.type === 'arrow' ? ' marker-end="url(#arrowHead)"' : '';
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${escapeHtml(color)}" stroke-width="${strokeWidth}" stroke-linecap="round"${marker} style="color:${escapeHtml(color)}" />`;
+    }
+
+    // Embed the current uploaded source as an optional fallback/demo load.
+  </script>
+</body>
+</html>
